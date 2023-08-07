@@ -47,6 +47,19 @@ var _ = Describe("Keys", func() {
 		Ω(k2).To(BeNil())
 	})
 
+	It("should test private key b62", func() {
+		b, err := k.ToB62String()
+		Ω(err).To(BeNil())
+		k1, err := lk.PrivateKeyFromB62String(b)
+		Ω(err).To(BeNil())
+		Ω(k1).To(Equal(k))
+
+		invalidB62Str := uniuri.NewLen(42)
+		k2, err := lk.PrivateKeyFromB62String(invalidB62Str)
+		Ω(err).To(HaveOccurred())
+		Ω(k2).To(BeNil())
+	})
+
 	It("should test private key b32", func() {
 		b, err := k.ToB32String()
 		Ω(err).To(BeNil())
@@ -95,6 +108,18 @@ var _ = Describe("Keys", func() {
 
 		invalidB64Str := uniuri.NewLen(42)
 		k2, err := lk.PublicKeyFromB64String(invalidB64Str)
+		Ω(err).To(HaveOccurred())
+		Ω(k2).To(BeNil())
+	})
+
+	It("should test pubic key b62", func() {
+		b := k.GetPublicKey().ToB62String()
+		k1, err := lk.PublicKeyFromB62String(b)
+		Ω(err).To(BeNil())
+		Ω(k1).To(Equal(k.GetPublicKey()))
+
+		invalidB62Str := uniuri.NewLen(42)
+		k2, err := lk.PublicKeyFromB62String(invalidB62Str)
 		Ω(err).To(HaveOccurred())
 		Ω(k2).To(BeNil())
 	})

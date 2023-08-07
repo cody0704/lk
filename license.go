@@ -60,6 +60,11 @@ func (l *License) ToB64String() (string, error) {
 	return toB64String(l)
 }
 
+// ToB58String transforms the license to a base32 []byte.
+func (l *License) ToB62String() (string, error) {
+	return toB62String(l)
+}
+
 // ToB32String transforms the license to a base32 []byte.
 func (l *License) ToB32String() (string, error) {
 	return toB32String(l)
@@ -81,6 +86,13 @@ func LicenseFromBytes(b []byte) (*License, error) {
 func LicenseFromB64String(str string) (*License, error) {
 	l := &License{}
 	return l, fromB64String(l, str)
+}
+
+// LicenseFromB62String returns a License from a base62 encoded
+// string.
+func LicenseFromB62String(str string) (*License, error) {
+	l := &License{}
+	return l, fromB62String(l, str)
 }
 
 // LicenseFromB32String returns a License from a base64 encoded

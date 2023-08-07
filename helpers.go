@@ -6,6 +6,8 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"encoding/hex"
+
+	"github.com/jxskiss/base62"
 )
 
 func toBytes(obj interface{}) ([]byte, error) {
@@ -26,6 +28,15 @@ func toB64String(obj interface{}) (string, error) {
 	}
 
 	return base64.StdEncoding.EncodeToString(b), nil
+}
+
+func toB62String(obj interface{}) (string, error) {
+	b, err := toBytes(obj)
+	if err != nil {
+		return "", err
+	}
+
+	return base62.EncodeToString(b), nil
 }
 
 func toB32String(obj interface{}) (string, error) {
@@ -55,6 +66,15 @@ func fromBytes(obj interface{}, b []byte) error {
 
 func fromB64String(obj interface{}, s string) error {
 	b, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return err
+	}
+
+	return fromBytes(obj, b)
+}
+
+func fromB62String(obj interface{}, s string) error {
+	b, err := base62.StdEncoding.DecodeString(s)
 	if err != nil {
 		return err
 	}

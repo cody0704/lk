@@ -9,6 +9,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"math/big"
+
+	"github.com/jxskiss/base62"
 )
 
 // PrivateKey is the master key to create the licenses. Keep it in a secure
@@ -62,6 +64,15 @@ func (k PrivateKey) ToB64String() (string, error) {
 	return base64.StdEncoding.EncodeToString(b), nil
 }
 
+// ToB64String transforms the private key to a base64 string.
+func (k PrivateKey) ToB62String() (string, error) {
+	b, err := k.ToBytes()
+	if err != nil {
+		return "", err
+	}
+	return base62.StdEncoding.EncodeToString(b), nil
+}
+
 // ToB32String transforms the private key to a base32 string.
 func (k PrivateKey) ToB32String() (string, error) {
 	b, err := k.ToBytes()
@@ -102,6 +113,16 @@ func PrivateKeyFromBytes(b []byte) (*PrivateKey, error) {
 // string.
 func PrivateKeyFromB64String(str string) (*PrivateKey, error) {
 	b, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return nil, err
+	}
+	return PrivateKeyFromBytes(b)
+}
+
+// PrivateKeyFromB62String returns a private key from a base62 encoded
+// string.
+func PrivateKeyFromB62String(str string) (*PrivateKey, error) {
+	b, err := base62.StdEncoding.DecodeString(str)
 	if err != nil {
 		return nil, err
 	}
@@ -157,6 +178,13 @@ func (k PublicKey) ToB64String() string {
 	)
 }
 
+// ToB62String transforms the public key to a base62 string.
+func (k PublicKey) ToB62String() string {
+	return base62.StdEncoding.EncodeToString(
+		k.ToBytes(),
+	)
+}
+
 // ToB32String transforms the public key to a base32 string.
 func (k PublicKey) ToB32String() string {
 	return base32.StdEncoding.EncodeToString(
@@ -191,6 +219,17 @@ func PublicKeyFromBytes(b []byte) (*PublicKey, error) {
 // string.
 func PublicKeyFromB64String(str string) (*PublicKey, error) {
 	b, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return nil, err
+	}
+
+	return PublicKeyFromBytes(b)
+}
+
+// PublicKeyFromB62String returns a public key from a base62 encoded
+// string.
+func PublicKeyFromB62String(str string) (*PublicKey, error) {
+	b, err := base62.StdEncoding.DecodeString(str)
 	if err != nil {
 		return nil, err
 	}

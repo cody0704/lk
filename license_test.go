@@ -75,6 +75,18 @@ var _ = Describe("License", func() {
 
 	})
 
+	It("should test a license with b62", func() {
+		b2, err := license.ToB62String()
+		Ω(err).To(BeNil())
+		l2, err := lk.LicenseFromB62String(b2)
+		Ω(err).To(BeNil())
+		ok, err := l2.Verify(privateKey.GetPublicKey())
+		Ω(err).To(BeNil())
+		Ω(ok).To(BeTrue())
+		Ω(bytes.Equal(license.Data, l2.Data)).To(BeTrue())
+
+	})
+
 	It("should test a license with b32", func() {
 		b2, err := license.ToB32String()
 		Ω(err).To(BeNil())
